@@ -1,0 +1,11 @@
+[project]
+name = "event-tracker"
+version = "0.1.0"
+description = "todo-mcp tools + skills (inbox-radar) behind one claude.ai connector, with Neon Auth private lists"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp[cli]>=1.2,<2",
+    "psycopg[binary]>=3.1",
+    "PyJWT[crypto]>=2.8",
+    "tzdata",
+]

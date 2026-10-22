@@ -1,0 +1,19 @@
+# One-click deploy: https://render.com -> New -> Blueprint -> this repo.
+# Free tier sleeps when idle; first call after a nap takes ~30-60s.
+services:
+  - type: web
+    name: event-tracker
+    runtime: python
+    plan: free
+    # mcp<2 pin in BOTH places (buildCommand bypasses pyproject).
+    buildCommand: pip install "mcp[cli]>=1.2,<2" "psycopg[binary]>=3.1" "PyJWT[crypto]>=2.8" tzdata
+    startCommand: python server.py
+    envVars:
+      - key: DATABASE_URL
+        sync: false   # Neon -> your project -> Connect: the postgresql:// string
+      - key: NEON_AUTH_BASE_URL
+        sync: false   # Neon -> Auth -> Configuration: the one auth URL (.../neondb/auth)
+      - key: PUBLIC_URL
+        sync: false   # YOUR service URL, e.g. https://event-tracker-xxxx.onrender.com
+      - key: TASKS_TZ
+        value: America/New_York   # how naive due times ('2026-10-21T17:00') are read
