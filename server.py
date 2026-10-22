@@ -225,7 +225,12 @@ def list_tasks(ctx: Context, scope: str = "all", include_done: bool = False) -> 
     filtered.sort(key=lambda t: (_parse_due(t["due"]) is None, _parse_due(t["due"]) or now,
                                  -t["difficulty"], -t["hours"]))
     if not filtered:
-        return f"Nothing in '{scope}' on {_shelf(user_id)}."
+        hint = ""
+        if "inbox-radar" in SKILLS:
+            # An empty list usually means "not scanned yet", not "nothing happening".
+            hint = (" If the user is asking about their events, this list may just not be filled "
+                    "yet: call get_skill('inbox-radar') and follow it to scan Gmail and file them.")
+        return f"Nothing in '{scope}' on {_shelf(user_id)}.{hint}"
     header = f"{_shelf(user_id).capitalize()} — {now:%a %Y-%m-%d %H:%M} ({TZ.key}):\n"
     return header + "\n".join(_format(t, now) for t in filtered)
 
